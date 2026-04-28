@@ -8,11 +8,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@14.1.0/dist/twemoji.min.js"></script>
     
     <style>
-        /* 基礎設置 */
+        :root {
+            --primary-peach: #FF8A65;    /* 標題與按鈕的蜜桃橘 */
+            --light-peach: #FFF1EE;      /* 卡片背景的極淺蜜桃色 */
+            --coffee-brown: #5D4037;     /* 咖啡色（子標題與主要文字） */
+            --soft-bg: #FFF9F2;          /* 全域背景色 */
+            --sub-text: #8D6E63;         /* 副標題的淺咖啡色 */
+        }
+
         body {
-            background-color: #FFF9F2;
+            background-color: var(--soft-bg);
             font-family: 'Helvetica Neue', Arial, 'LiHei Pro', "微軟正黑體", sans-serif;
-            color: #5D4037;
+            color: var(--coffee-brown);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -23,7 +30,6 @@
             box-sizing: border-box;
         }
 
-        /* 測驗容器 */
         .container {
             background-color: white;
             border-radius: 35px;
@@ -33,14 +39,14 @@
             max-width: 420px;
             width: 100%;
             border: 5px solid #FFF1E6;
-            min-height: 400px; /* 確保動畫切換時高度不會突然崩塌 */
+            min-height: 420px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        h1 { font-size: 30px; margin-bottom: 12px; color: #FF8A65; letter-spacing: 1px; }
-        p.subtitle { font-size: 16px; color: #8D6E63; margin-bottom: 35px; opacity: 0.8; }
+        h1 { font-size: 30px; margin-bottom: 12px; color: var(--primary-peach); letter-spacing: 1px; }
+        .subtitle { font-size: 16px; color: var(--sub-text); margin-bottom: 35px; opacity: 0.8; }
 
         /* 下拉選單 */
         select {
@@ -50,19 +56,17 @@
             border: 2px solid #E3F2FD;
             border-radius: 20px;
             background-color: #FAFAFA;
-            color: #5D4037;
+            color: var(--coffee-brown);
             margin-bottom: 25px;
             outline: none;
             cursor: pointer;
             appearance: none;
             text-align: center;
-            transition: border-color 0.3s;
         }
-        select:focus { border-color: #FFAB91; }
 
         /* 主按鈕 */
         button.main-btn {
-            background-color: #FFAB91;
+            background-color: var(--primary-peach);
             color: white;
             border: none;
             padding: 18px 20px;
@@ -74,19 +78,19 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 6px 15px rgba(255, 171, 145, 0.3);
         }
-        button.main-btn:hover {
-            transform: scale(1.03);
-            background-color: #FF8A65;
-        }
-
-        /* 隱藏區塊共用 */
-        #result-area, #animation-stage {
-            display: none; 
-        }
+        button.main-btn:hover { transform: scale(1.03); background-color: #FF7043; }
 
         /* --- 動畫舞台區 --- */
         #animation-stage {
-            padding: 40px 0;
+            display: none;
+            padding: 20px 0;
+        }
+        .loading-text {
+            font-size: 18px;
+            color: var(--primary-peach);
+            margin-top: 25px;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
         .giant-sticker {
             font-size: 80px;
@@ -101,16 +105,7 @@
             border: 5px solid #FFF; 
             box-shadow: 0 15px 30px rgba(0,0,0,0.1);
             position: relative;
-            /* 緩慢彈跳放大的動畫 */
             animation: slowBounceIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        .giant-sticker::after {
-            content: '';
-            position: absolute;
-            top: -8px; left: -8px; right: -8px; bottom: -8px;
-            border: 3px solid #F5F5F5;
-            border-radius: 50%;
-            z-index: -1;
         }
         @keyframes slowBounceIn {
             0% { opacity: 0; transform: scale(0.3) translateY(50px); }
@@ -128,19 +123,26 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .result-title { font-size: 28px; font-weight: bold; color: #FF8A65; margin-bottom: 18px; }
+        /* 靈魂國籍標題：統一咖啡色 */
+        .result-title { 
+            font-size: 28px; 
+            font-weight: bold; 
+            margin-bottom: 18px; 
+            color: var(--coffee-brown); 
+        }
+        
+        /* 結果卡片：統一固定顏色（淺蜜桃色） */
         .result-desc { 
             font-size: 17px; 
             line-height: 1.7; 
             margin-bottom: 25px; 
-            background-color: #FDEFF2; 
             padding: 22px; 
             border-radius: 22px; 
-            color: #546E7A;
             text-align: left;
+            background-color: var(--light-peach);
+            color: var(--coffee-brown);
         }
 
-        /* 插畫貼紙區塊 */
         .illustration-container {
             display: flex;
             justify-content: center;
@@ -159,19 +161,10 @@
             border-radius: 50%;
             border: 4px solid #FFF; 
             box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            position: relative;
-        }
-        .sticker::after {
-            content: '';
-            position: absolute;
-            top: -6px; left: -6px; right: -6px; bottom: -6px;
-            border: 2px solid #F5F5F5;
-            border-radius: 50%;
-            z-index: -1;
         }
 
         img.emoji { height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em; }
-        .reset-link { display: inline-block; margin-top: 10px; color: #FFAB91; text-decoration: none; font-size: 15px; cursor: pointer; font-weight: bold; }
+        .reset-link { display: inline-block; margin-top: 10px; color: var(--primary-peach); text-decoration: none; font-size: 15px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -197,20 +190,21 @@
                 <option value="16">16:00 - 18:00</option>
                 <option value="19">19:00 - 20:00</option>
             </select>
-            <button class="main-btn" onclick="calculateResult()">你適合做什麼樣的事情？</button>
+            <button class="main-btn" onclick="calculateResult()">揭曉我的靈魂國籍</button>
         </div>
 
         <div id="animation-stage">
-            <div class="giant-sticker" id="anim-animal">🐾</div>
+            <div class="giant-sticker" id="anim-flag">🏳️</div>
+            <div class="loading-text">您的靈魂國籍是...</div>
         </div>
 
         <div id="final-result">
             <div class="result-title" id="result-name">讀取中...</div>
-            <div class="result-desc" id="result-text">讀取中...</div>
+            <div class="result-desc" id="result-text">載入建議中...</div>
             
             <div class="illustration-container">
                 <div class="sticker" id="res-flag">🏳️</div>
-                <div class="sticker" id="res-animal">🐾</div>
+                <div class="sticker" id="res-icon">🗺️</div>
             </div>
             
             <span class="reset-link" onclick="resetTest()">↺ 再測一次</span>
@@ -219,17 +213,17 @@
 
     <script>
         const resultsData = {
-            "21": { flag: "🇯🇵", animal: "🐱", name: "日本溫泉鄉", text: "貼心建議您睡前多喝杯熱牛奶。能在這喧囂的時代保持如此珍稀的初老作息，這份心如止水真是令人羨慕呢。" },
-            "23": { flag: "🇹🇼", animal: "🐻", name: "台灣健康寶寶", text: "建議您繼續保持這份無懈可擊的完美作息。畢竟明天還要充滿活力地為公司創造價值，真的是太優秀的現代楷模了。" },
-            "0": { flag: "🇹🇭", animal: "🐘", name: "曼谷微夜貓", text: "建議您乾脆點份泰式宵夜犒賞自己。既然靈魂捨不得休止，不如就順應這份熱情，好好享受這段專屬的曼谷時光吧。" },
-            "2": { flag: "🇦🇪", animal: "🐫", name: "杜拜夢想家", text: "誠摯建議您把過人的深夜精力拿來規劃杜拜之旅。擁有像石油大亨般的不眠體質，不拿來思考如何財富自由太可惜了呢。" },
-            "4": { flag: "🇬🇧", animal: "🦁", name: "英倫夜貓貴族", text: "建議您為自己優雅地泡杯伯爵茶。既然生理時鐘已完美與倫敦接軌，就用最從容的姿態，把失眠過成一種貴族日常吧。" },
-            "6": { flag: "🇦🇶", animal: "🐧", name: "極地慵懶企鵝", text: "溫馨提醒您睡前記得把冷氣開強一點。成功克服了地球日夜交替，想必只有極地的氣候才能配得上您的超然作息了。" },
-            "8": { flag: "🇺🇸", animal: "🦅", name: "華爾街觀察家", text: "強烈建議您立刻下載美股軟體。當大家庸碌地準備上班，您卻優雅互道晚安，這份充滿資本主義氣息的時差真是太高級了。" },
-            "10": { flag: "🇲🇽", animal: "🐆", name: "中南美洲狂徒", text: "建議您起床後直接享用塔可餅當早餐。能把日夜顛倒發揮到天花板級別的藝術，您的肝臟想必也充滿拉丁美洲般的彈性呢。" },
-            "13": { flag: "🇺🇸", animal: "🦢", name: "好萊塢大明星", text: "貼心建議您出門記得戴上墨鏡。這份一覺睡到下午的頂級巨星作息，沒有配備專屬經紀人來打理，真的是太委屈您的排場了。" },
-            "16": { flag: "🌺", animal: "🐢", name: "夏威夷渡假達人", text: "建議您趕緊為自己添購幾件花襯衫。別人在夕陽下拖著疲憊身軀下班，您卻正要進入夢鄉，這份超脫世俗的鬆弛感真令人嚮往喔。" },
-            "19": { flag: "🏝️", animal: "🦀", name: "無人島島主", text: "誠懇建議您將手機直接關機。能在晚上七點就放下塵世喧囂，這份看破紅塵的清心寡慾，世間沒幾個人能達到您的境界呢。" }
+            "21": { flag: "🇯🇵", icon: "🌸", name: "日本溫泉鄉", text: "貼心建議您睡前多喝杯熱牛奶。能在這喧囂的時代保持如此珍稀的初老作息，這份心如止水真是令人羨慕呢。" },
+            "23": { flag: "🇹🇼", icon: "🐻", name: "台灣健康寶寶", text: "建議您繼續保持這份無懈可擊的完美作息。畢竟明天還要充滿活力地為公司創造價值，真的是太優秀的現代楷模了。" },
+            "0": { flag: "🇹🇭", icon: "🐘", name: "曼谷微夜貓", text: "建議您乾脆點份泰式宵夜犒賞自己。既然靈魂捨不得休止，不如就順應這份熱情，好好享受這段專屬的曼谷時光吧。" },
+            "2": { flag: "🇦🇪", icon: "🐫", name: "杜拜夢想家", text: "誠摯建議您把過人的深夜精力拿來規劃杜拜之旅。擁有像石油大亨般的不眠體質，不拿來思考如何財富自由太可惜了呢。" },
+            "4": { flag: "🇬🇧", icon: "🦁", name: "英倫夜貓貴族", text: "建議您為自己優雅地泡杯伯爵茶。既然生理時鐘已完美與倫敦接軌，就用最從容的姿態，把失眠過成一種貴族日常吧。" },
+            "6": { flag: "🇦🇶", icon: "🐧", name: "極地慵懶企鵝", text: "溫馨提醒您睡前記得把冷氣開強一點。成功克服了地球日夜交替，想必只有極地的氣候才能配得上您的超然作息了。" },
+            "8": { flag: "🇺🇸", icon: "🦅", name: "華爾街觀察家", text: "強烈建議您立刻下載美股軟體。當大家庸碌地準備上班，您卻優雅互道晚安，這份充滿資本主義氣息的時差真是太高級了。" },
+            "10": { flag: "🇲🇽", icon: "🌎", name: "中南美洲狂徒", text: "建議您起床後直接享用塔可餅當早餐。能把日夜顛倒發揮到天花板級別的藝術，您的肝臟想必也充滿拉丁美洲般的彈性呢。" },
+            "13": { flag: "🇺🇸", icon: "🦢", name: "好萊塢大明星", text: "貼心建議您出門記得戴上墨鏡。這份一覺睡到下午的頂級巨星作息，沒有配備專屬經紀人來打理，真的是太委屈您的排場了。" },
+            "16": { flag: "🌺", icon: "🐢", name: "夏威夷渡假達人", text: "建議您趕緊為自己添購幾件花襯衫。別人在夕陽下拖著疲憊身軀下班，您卻正要進入夢鄉，這份超脫世俗的鬆弛感真令人嚮往喔。" },
+            "19": { flag: "🏝️", icon: "🦀", name: "無人島島主", text: "誠懇建議您將手機直接關機。能在晚上七點就放下塵世喧囂，這份看破紅塵的清心寡慾，世間沒幾個人能達到您的境界呢。" }
         };
 
         twemoji.parse(document.body);
@@ -240,40 +234,30 @@
 
             const data = resultsData[timeVal];
 
-            // 1. 隱藏輸入區，並隱藏原本的副標題讓畫面乾淨點
             document.getElementById('input-area').style.display = 'none';
             document.querySelector('.subtitle').style.display = 'none';
 
-            // 2. 顯示動畫舞台，塞入放大的動物並轉換成 Twemoji
-            const animAnimal = document.getElementById('anim-animal');
-            animAnimal.innerText = data.animal;
+            const animFlag = document.getElementById('anim-flag');
+            animFlag.innerText = data.flag;
             document.getElementById('animation-stage').style.display = 'block';
-            twemoji.parse(animAnimal);
+            twemoji.parse(animFlag);
 
-            // 3. 準備好最終結果的內容
             document.getElementById('result-name').innerText = data.name;
             document.getElementById('result-text').innerText = data.text;
-            
-            const flagSticker = document.getElementById('res-flag');
-            const animalSticker = document.getElementById('res-animal');
-            flagSticker.innerText = data.flag;
-            animalSticker.innerText = data.animal;
+            document.getElementById('res-flag').innerText = data.flag;
+            document.getElementById('res-icon').innerText = data.icon;
+            twemoji.parse(document.getElementById('final-result'));
 
-            twemoji.parse(flagSticker);
-            twemoji.parse(animalSticker);
-
-            // 4. 設定 2 秒鐘後，隱藏動畫舞台，顯示最終結果
             setTimeout(() => {
                 document.getElementById('animation-stage').style.display = 'none';
                 document.getElementById('final-result').style.display = 'block';
-            }, 2000); // 2000 毫秒 = 2 秒
+            }, 2000); 
         }
 
         function resetTest() {
-            // 重置所有區塊狀態
             document.getElementById('final-result').style.display = 'none';
             document.getElementById('animation-stage').style.display = 'none';
-            document.querySelector('.subtitle').style.display = 'block'; // 恢復副標題
+            document.querySelector('.subtitle').style.display = 'block'; 
             document.getElementById('input-area').style.display = 'block';
             document.getElementById('sleep-time').value = "";
         }
